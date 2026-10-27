@@ -1,0 +1,212 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>html{background:#0b0f17}</style></head><body>
+<title>Living Room Launcher</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap">
+<style>
+/* Layout: 10-foot TV home screen. Header with clock, then rows of large tiles; the focused tile lifts and gets an amber ring. Old-browser safe: floats and inline-block, no grid, no ES6. */
+:root {
+  --bg: #0b0f17;
+  --surface: #151c2a;
+  --ink: #eef1f6;
+  --muted: #8f9bb0;
+  --accent: #ffb454;
+  --line: #243049;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", Arial, sans-serif;
+  --font-body: "Figtree", "Segoe UI", Arial, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: auto; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.4;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-top: 28px;
+  padding-bottom: 40px;
+  overflow-x: hidden;
+}
+.wrap { max-width: 1400px; margin: 0 auto; }
+.top { overflow: hidden; padding: 0 8px 18px; }
+.clock { float: left; }
+.time {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.date { color: var(--muted); font-size: 22px; margin-top: 6px; }
+.hello { float: right; text-align: right; color: var(--muted); font-size: 20px; padding-top: 10px; }
+.hello b { display: block; color: var(--ink); font-family: var(--font-display); font-size: 28px; font-weight: 600; }
+.row { padding: 10px 0 6px; }
+.row h2 {
+  margin: 0;
+  padding: 0 14px 4px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.tiles { font-size: 0; padding: 4px 0 12px; }
+.tile {
+  display: inline-block;
+  vertical-align: top;
+  width: 25%;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 18px;
+  text-decoration: none;
+  color: var(--ink);
+  outline: none;
+}
+.card {
+  position: relative;
+  height: 150px;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-sizing: border-box;
+  background: var(--surface);
+  border: 3px solid transparent;
+  overflow: hidden;
+  -webkit-transition: -webkit-transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.card .band { position: absolute; left: 0; top: 0; bottom: 0; width: 10px; }
+.card .mono {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 1;
+  margin-left: 8px;
+}
+.card .name { display: block; margin: 14px 0 0 8px; font-size: 24px; font-weight: 600; }
+.card .hint { display: block; margin: 2px 0 0 8px; font-size: 15px; color: var(--muted); }
+.tile:focus .card, .tile:hover .card {
+  border-color: var(--accent);
+  -webkit-transform: scale(1.06);
+  transform: scale(1.06);
+  background: #1b2436;
+}
+.foot { padding: 14px 14px 0; color: var(--muted); font-size: 16px; border-top: 1px solid var(--line); margin-top: 10px; }
+.foot kbd {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 1px 8px;
+}
+@media (max-width: 1000px) { .tile { width: 33.333%; } .time { font-size: 56px; } }
+@media (max-width: 640px) { .tile { width: 50%; } .hello { display: none; } }
+@media (prefers-reduced-motion: reduce) { .card { -webkit-transition: none; transition: none; } }
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <div class="clock">
+      <div class="time" id="time">--:--</div>
+      <div class="date" id="date">&nbsp;</div>
+    </div>
+    <div class="hello"><b id="greet">Welcome</b>Pick something to open</div>
+  </div>
+
+  <div class="row">
+    <h2>Watch</h2>
+    <div class="tiles">
+      <a class="tile" href="https://www.youtube.com/tv"><span class="card"><i class="band" style="background:#ff3b30"></i><span class="mono">YT</span><span class="name">YouTube</span><span class="hint">Videos and live</span></span></a>
+      <a class="tile" href="https://www.netflix.com"><span class="card"><i class="band" style="background:#e50914"></i><span class="mono">N</span><span class="name">Netflix</span><span class="hint">Series and films</span></span></a>
+      <a class="tile" href="https://shahid.mbc.net"><span class="card"><i class="band" style="background:#19c37d"></i><span class="mono">SH</span><span class="name">Shahid</span><span class="hint">Arabic series</span></span></a>
+      <a class="tile" href="https://www.watchit.com"><span class="card"><i class="band" style="background:#b4308b"></i><span class="mono">W</span><span class="name">Watch it</span><span class="hint">Egyptian drama</span></span></a>
+      <a class="tile" href="https://www.tod.tv"><span class="card"><i class="band" style="background:#00a6a6"></i><span class="mono">TOD</span><span class="name">TOD</span><span class="hint">Sports and series</span></span></a>
+      <a class="tile" href="https://www.primevideo.com"><span class="card"><i class="band" style="background:#1fa3ff"></i><span class="mono">P</span><span class="name">Prime Video</span><span class="hint">Amazon originals</span></span></a>
+      <a class="tile" href="https://www.disneyplus.com"><span class="card"><i class="band" style="background:#3b5bdb"></i><span class="mono">D+</span><span class="name">Disney+</span><span class="hint">Family</span></span></a>
+      <a class="tile" href="https://www.twitch.tv"><span class="card"><i class="band" style="background:#9146ff"></i><span class="mono">TW</span><span class="name">Twitch</span><span class="hint">Live streams</span></span></a>
+      <a class="tile" href="https://www.dailymotion.com"><span class="card"><i class="band" style="background:#2d6cdf"></i><span class="mono">DM</span><span class="name">Dailymotion</span><span class="hint">Videos</span></span></a>
+    </div>
+  </div>
+
+  <div class="row">
+    <h2>Listen and play</h2>
+    <div class="tiles">
+      <a class="tile" href="https://open.spotify.com"><span class="card"><i class="band" style="background:#1ed760"></i><span class="mono">SP</span><span class="name">Spotify</span><span class="hint">Music and podcasts</span></span></a>
+      <a class="tile" href="https://www.anghami.com"><span class="card"><i class="band" style="background:#a855f7"></i><span class="mono">AN</span><span class="name">Anghami</span><span class="hint">Arabic music</span></span></a>
+      <a class="tile" href="https://soundcloud.com"><span class="card"><i class="band" style="background:#ff7a1a"></i><span class="mono">SC</span><span class="name">SoundCloud</span><span class="hint">Tracks</span></span></a>
+      <a class="tile" href="https://www.crazygames.com"><span class="card"><i class="band" style="background:#7c5cff"></i><span class="mono">G</span><span class="name">Browser games</span><span class="hint">Play with the remote</span></span></a>
+    </div>
+  </div>
+
+  <div class="row">
+    <h2>Browse</h2>
+    <div class="tiles">
+      <a class="tile" href="https://www.google.com"><span class="card"><i class="band" style="background:#4c8bf5"></i><span class="mono">G</span><span class="name">Google</span><span class="hint">Search</span></span></a>
+      <a class="tile" href="https://www.facebook.com"><span class="card"><i class="band" style="background:#1877f2"></i><span class="mono">F</span><span class="name">Facebook</span><span class="hint">Feed</span></span></a>
+      <a class="tile" href="https://news.google.com"><span class="card"><i class="band" style="background:#f4b400"></i><span class="mono">NW</span><span class="name">News</span><span class="hint">Headlines</span></span></a>
+      <a class="tile" href="https://www.google.com/search?q=weather+cairo"><span class="card"><i class="band" style="background:#2bb3c0"></i><span class="mono">WX</span><span class="name">Cairo weather</span><span class="hint">Today and this week</span></span></a>
+    </div>
+  </div>
+
+  <div class="foot">Move with the <kbd>&#9664;</kbd> <kbd>&#9650;</kbd> <kbd>&#9654;</kbd> <kbd>&#9660;</kbd> arrow keys, open with <kbd>OK</kbd>. These open the web versions of each service.</div>
+</div>
+
+<script>
+(function () {
+  var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  function pad(n) { return n < 10 ? "0" + n : "" + n; }
+  function tick() {
+    var d = new Date();
+    var h = d.getHours();
+    var h12 = h % 12; if (h12 === 0) { h12 = 12; }
+    document.getElementById("time").innerHTML = h12 + ":" + pad(d.getMinutes()) + " " + (h < 12 ? "AM" : "PM");
+    document.getElementById("date").innerHTML = days[d.getDay()] + ", " + d.getDate() + " " + months[d.getMonth()];
+    document.getElementById("greet").innerHTML = h < 5 ? "Late night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  }
+  tick();
+  setInterval(tick, 20000);
+
+  var tiles = document.getElementsByClassName("tile");
+  function center(el) {
+    var r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  }
+  function move(dir) {
+    var cur = document.activeElement;
+    var list = [], i;
+    for (i = 0; i < tiles.length; i++) { list.push(tiles[i]); }
+    var isTile = false;
+    for (i = 0; i < list.length; i++) { if (list[i] === cur) { isTile = true; } }
+    if (!isTile) { list[0].focus(); return; }
+    var c = center(cur), best = null, bestScore = 1e9;
+    for (i = 0; i < list.length; i++) {
+      if (list[i] === cur) { continue; }
+      var p = center(list[i]);
+      var dx = p.x - c.x, dy = p.y - c.y, along, across;
+      if (dir === "left")  { along = -dx; across = Math.abs(dy); }
+      if (dir === "right") { along = dx;  across = Math.abs(dy); }
+      if (dir === "up")    { along = -dy; across = Math.abs(dx); }
+      if (dir === "down")  { along = dy;  across = Math.abs(dx); }
+      if (along <= 5) { continue; }
+      var score = along + across * 3;
+      if (score < bestScore) { bestScore = score; best = list[i]; }
+    }
+    if (best) {
+      best.focus();
+      var r = best.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (r.top < 80 || r.bottom > vh - 40) { window.scrollTo(0, (window.pageYOffset || 0) + r.top - vh / 3); }
+    }
+  }
+  document.addEventListener("keydown", function (e) {
+    var k = e.keyCode, dir = k === 37 ? "left" : k === 38 ? "up" : k === 39 ? "right" : k === 40 ? "down" : null;
+    if (dir) { e.preventDefault(); move(dir); }
+  });
+  tiles[0].focus();
+})();
+</script>
+</body></html>
